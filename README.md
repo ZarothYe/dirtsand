@@ -7,8 +7,12 @@ Introduction
 DIRTSAND is a full featured MOULa-compatible server platform for POSIX-compliant
 operating systems, written in C++ and released under the AGPL version 3+.
 Currently, it has only been tested on Linux, but in theory it should work on
-other Unixes as well.  There are, however, currently no plans for Windows
-development or support.
+other Unixes as well. There are currently no plans for Windows development or
+support.
+
+However, DIRTSAND may be set up on Windows (or other architectures) using Docker
+in order to be used as a local testing server. For instructions, go to the
+[DOCKERSAND](#DOCKERSAND) section directly.
 
 
 Prerequisites
@@ -51,7 +55,7 @@ Building the code
 
    If you run into any errors about finding libraries or headers, make sure
    you have the *development* versions of all of the required libraries, and
-   that they are in your path.  You can also use the `cmake-gui` to help cmake
+   that they are in your path. You can also use the `cmake-gui` to help cmake
    locate the missing paths and files.
 
 
@@ -59,18 +63,18 @@ Setting up a server
 -------------------
 
 You will need a working Postgres server which DIRTSAND can use to store its
-data.  Although you don't need superuser access to the postgres server, you
+data. Although you don't need superuser access to the postgres server, you
 will need to have a database which you can add schemas, tables, etc into.
 
 Setting up postgres functionality without a superuser account is currently
-beyond the scope of this document...  If you need to do this, keep in mind
+beyond the scope of this document.... If you need to do this, keep in mind
 that you may also have to edit the database initialization scripts to work
 against an existing user and/or database.
 
 For the default installation, the provided scripts will create a dirtsand
 database and set its ownership to a 'dirtsand' database user, which can
 directly map the system dirtsand user created in step 1 of the "Building
-the code" instructions above.  For better security, it is recommended to
+the code" instructions above. For better security, it is recommended to
 use a password (as shown in the steps below), which can be configured in
 the server settings as described in the "configure dirtsand" step.
 
@@ -87,11 +91,11 @@ the server settings as described in the "configure dirtsand" step.
 
 2) Install the UUID functionality:
 
-   This may be provided by your OS distribution.  In Ubuntu, simply install
+   This may be provided by your OS distribution. In Ubuntu, simply install
    the `postgresql-contrib` package to provide the necessary libraries and
-   installation scripts.  If your distribution does not provide a contrib
+   installation scripts. If your distribution does not provide a contrib
    or uuid-ossp bundle, you can get it and build it yourself from the
-   sources provided at:  http://www.ossp.org/pkg/lib/uuid/
+   sources provided at: http://www.ossp.org/pkg/lib/uuid/
 
    In versions of Postgres **older than** 9.x, you will need to use the
    import script to add the uuid extension to the dirtsand database:
@@ -124,13 +128,13 @@ the server settings as described in the "configure dirtsand" step.
 4) Configure dirtsand:
 
    A sample dirtsand.ini has been provided in the root of the dirtsand
-   sources.  We can copy this to our install directory and then edit the
-   fields we need.  Specifically, you will need to adjust the server
-   addresses and the RC4 keys.  If you have dirtsand installed to somewhere
+   sources. We can copy this to our install directory and then edit the
+   fields we need. Specifically, you will need to adjust the server
+   addresses and the RC4 keys. If you have dirtsand installed to somewhere
    other than /opt/dirtsand, you will also need to point the configuration
    to the right paths too.
 
-    ```
+   ```
    $ sudo cp dirtsand.sample.ini /opt/dirtsand/dirtsand.ini
    $ sudo chown dirtsand /opt/dirtsand/dirtsand.ini
    $ <your-favorite-editor> dirtsand.ini
@@ -143,23 +147,23 @@ the server settings as described in the "configure dirtsand" step.
    $ bin/dirtsand --generate-keys
    ```
 
-   You should now have a bunch of keys output on your terminal.  The first
+   You should now have a bunch of keys output on your terminal. The first
    block (labeled Server keys) is the set you should paste into your
-   dirtsand.ini.  Replace the dummy lines (with the '...' values) with the
-   output from the `--generate-keys` command.  The second set of keys can be
+   dirtsand.ini. Replace the dummy lines (with the '...' values) with the
+   output from the `--generate-keys` command. The second set of keys can be
    placed directly in the client's server.ini file (NOTE: This requires
    either the H-uru fork of CWE or PlasmaClient -- the vanilla MOUL
    client cannot load keys from a file, and you will have to enter the
    keys as byte arrays directly into the executable.
 
-5) Provide data for the client to use.  This process can be performed mostly
+5) Provide data for the client to use. This process can be performed mostly
    automatically using the [UruManifest](https://github.com/Hoikas/UruManifest)
    tool, which prepares a complete set of data files and generates the
-   appropriate manifests.  The instructions below describe how to set up the
+   appropriate manifests. The instructions below describe how to set up the
    data files and manifests manually.
 
    The most important data for the client are the auth server provided
-   files -- specifically, the SDL and python.pak.  External Plasma clients
+   files -- specifically, the SDL and python.pak. External Plasma clients
    require these files in order to function, so you will need to provide
    them unless you are planning on making your server only work with
    Internal client builds.
@@ -171,10 +175,10 @@ the server settings as described in the "configure dirtsand" step.
 
    To provide the files to the client, set up a directory for auth data
    (the default is /opt/dirtsand/authdata) and put the files in their
-   respective subdirectories (SDL/\*.sdl and Python/\*.pak).  Note that
+   respective subdirectories (SDL/\*.sdl and Python/\*.pak). Note that
    these files will need to be NTD encrypted with the key specified in
    your dirtsand.ini file (the default is the first 32 decimal digits of
-   pi, without the decimal point).  You can specify any 32 hex digit key,
+   pi, without the decimal point). You can specify any 32 hex digit key,
    but make sure to update the files to match.
 
    In order to let the client know what files are available, you will
@@ -192,16 +196,16 @@ the server settings as described in the "configure dirtsand" step.
    ```
 
    Note the use of a backslash here, since this path is provided directly
-   to the client (which assumes a Windows path).  Comments (starting with
+   to the client (which assumes a Windows path). Comments (starting with
    the `#` character) and whitespace will be ignored when parsing this file.
 
    --------
 
-   DIRTSAND also includes a full data server with its services.  If you
+   DIRTSAND also includes a full data server with its services. If you
    choose to use it, you will need to set up a data/ directory and the
-   necessary manifests.  At the very least, you will need the
+   necessary manifests. At the very least, you will need the
    ThinExternal.mfs and External.mfs files, which describe the files
-   necessary for the patcher and client (respectively) to run.  You may
+   necessary for the patcher and client (respectively) to run. You may
    also provide any number of age manifests, which will be requested by
    the client when it attempts to link to an age (e.g., Ahnonay.mfs).
 
@@ -213,7 +217,7 @@ the server settings as described in the "configure dirtsand" step.
 
    There is also a helper script provided in bin/dsData.sh which will gzip
    a file and generate a manifest line with the correct hashes and sizes
-   for you automatically.  Take care that the remote path expects to use a
+   for you automatically. Take care that the remote path expects to use a
    Windows path/filename, so it should use backslashes instead of forward
    ones, whereas the local filename should use Unix slashes.
 
@@ -224,7 +228,7 @@ the server settings as described in the "configure dirtsand" step.
 6) Run the server:
 
    Assuming everything else went smoothly, you should now be able to start
-   your server and connect to it!  You'll have to create an account first,
+   your server and connect to it! You'll have to create an account first,
    which can be done from the console:
 
    ```
@@ -239,6 +243,36 @@ the server settings as described in the "configure dirtsand" step.
    If you want to leave the server running across different login sessions
    and you don't have an X or VNC server running, I recommend running
    dirtsand in a detachable GNU screen session.
+
+
+DOCKERSAND
+-------------------
+
+Docker allows building and running isolated software programs (or "containers")
+in a platform-agnostic way. This allows users to bootstrap a new DIRTSAND 
+testing server much more quickly and easily on Windows, Mac, or Linux.
+
+1) Download and install [Docker Desktop](https://www.docker.com/get-started/). If
+   on Windows, you probably want to install WSL as directed by the installer. Your
+   computer may need to restart several times during these installs.
+2) Clone the dirtsand repo to a local directory.
+    - NOTE: Please ensure you are using `git config core.autocrlf false` if
+    on Windows. Otherwise, the bash script files can get corrupted with the wrong
+    line endings and your server container will fail to start.
+3) From the local repo root directory, run `./dockersand build`.
+	- NOTE: By default, dockersand will try to use the current directory name as
+    the base docker container name. You can overwrite this usage by setting the
+    $ProjectName variable in `dockersand.ps1` (for Windows) or the PROJECT_NAME
+    variable in `dockersand.sh` (for *nix) to the desired base container name.
+4) Once the build is complete, run `./dockersand start` to start the new containers
+for the database and the dirtsand server. Once this command has been run, you should
+be able to see the containers in Docker Desktop and start, stop, or remove the
+containers as desired. You can also view the docker logs for the containers.
+5) Retrieve the `server.ini` file from the build/etc folder. You will need this file
+for connecting to the server with a game client.
+6) Use `./dockersand attach` to attach to the dirtsand server and run commands as
+desired. For example, use `addacct <username> <password>` to create the user
+account you want to use to connect locally via the client.
 
 
 Additional Information
