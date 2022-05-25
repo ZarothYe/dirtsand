@@ -268,8 +268,8 @@ testing server much more quickly and easily on Windows, Mac, or Linux.
 
 4) Once the build is complete, run `./dockersand start` to start the new containers
 for the database and the dirtsand server. Once this command has been run, you should
-be able to see the containers in Docker Desktop and start, stop, or remove the
-containers as desired. You can also view the docker logs for the containers.
+be able to see the containers in Docker Desktop. You can also view the docker
+logs for the containers.
 
 5) Retrieve the `server.ini` file from the build/etc folder. You will need this file
 for connecting to the server with a game client.
